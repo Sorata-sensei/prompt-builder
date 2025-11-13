@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Prompt Builder Bys Anwar Fauzi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            border-radius: 1rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        textarea {
+            resize: none;
+        }
+
+        .result-box {
+            white-space: pre-wrap;
+            background-color: #fff;
+            border-radius: .75rem;
+            border: 1px solid #dee2e6;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body class="py-4">
+
+    <div class="container">
+        <div class="card p-4 mb-4">
+            <h2 class="mb-3 text-center"><i class="bi bi-lightning-charge-fill text-primary"></i> PWA Prompt Builder By
+                Anwar Fauzi</h2>
+            <p class="text-secondary text-center mb-4">
+                Gunakan form ini untuk membuat prompt yang siap dikirim ke <strong>Claude</strong>.<br>
+                Claude akan membantu kamu membangun aplikasi <strong>PWA (Progressive Web App)</strong> menggunakan
+                <strong>HTML, CSS, dan JavaScript</strong>.<br>
+                Isi bagian-bagian berikut sesuai ide aplikasimu.
+            </p>
+
+            <form id="promptForm">
+                <div class="mb-3">
+                    <label class="form-label">1. Nama Aplikasi</label>
+                    <input type="text" class="form-control" id="appName" placeholder="Contoh: SmartBudget">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">2. Tujuan / Fungsi Utama</label>
+                    <textarea class="form-control" id="purpose" rows="2"
+                        placeholder="Contoh: Mencatat pengeluaran harian dan menampilkan total bulanan."></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">3. Target Pengguna</label>
+                    <input type="text" class="form-control" id="targetUser"
+                        placeholder="Contoh: Mahasiswa, karyawan, ibu rumah tangga">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">4. Fitur-Fitur yang Diinginkan</label>
+                    <textarea class="form-control" id="features" rows="3"
+                        placeholder="Contoh: Tambah data, hapus data, simpan di localStorage, mode gelap, tampilan responsive"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">5. Desain dan Gaya Tampilan</label>
+                    <textarea class="form-control" id="design" rows="2"
+                        placeholder="Contoh: Warna biru-putih, gaya minimalis, font Poppins, navigasi di bawah"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">6. Interaksi dan Perilaku</label>
+                    <textarea class="form-control" id="interaction" rows="2"
+                        placeholder="Contoh: Klik tombol simpan → data muncul langsung dan tersimpan saat dibuka ulang."></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">7. Teknologi dan Struktur</label>
+                    <textarea class="form-control" id="tech" rows="2"
+                        placeholder="Contoh: HTML, CSS, JavaScript, localStorage, dan service worker untuk offline."></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">8. Tambahan (Opsional)</label>
+                    <textarea class="form-control" id="extras" rows="2"
+                        placeholder="Contoh: Tambahkan ikon, animasi loading, atau gunakan Bootstrap 5."></textarea>
+                </div>
+
+                <div class="d-grid">
+                    <button type="button" class="btn btn-primary" id="generateBtn">
+                        <i class="bi bi-magic"></i> Buat Prompt
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div id="resultSection" class="card p-4 d-none">
+            <h5 class="mb-3"><i class="bi bi-terminal-fill text-success"></i> Hasil Prompt Siap Kirim ke Claude</h5>
+            <div id="result" class="result-box"></div>
+            <button class="btn btn-outline-secondary mt-3" id="copyBtn">
+                <i class="bi bi-clipboard"></i> Salin Prompt
+            </button>
+            <p class="text-muted small mt-2">
+                Tempelkan prompt ini ke Claude.ai agar sistem membangun aplikasi PWA berbasis HTML, CSS, dan JavaScript
+                sesuai idemu.
+            </p>
+        </div>
+    </div>
+    <footer class="text-center mt-4">
+        <p class="text-muted small">Dibuat oleh <a href="https://anwarfauzi.my.id" target="_blank">Anwar Fauzi</a></p>
+    </footer>
+    <script>
+        document.getElementById("generateBtn").addEventListener("click", function () {
+            const data = {
+                appName: document.getElementById("appName").value.trim(),
+                purpose: document.getElementById("purpose").value.trim(),
+                targetUser: document.getElementById("targetUser").value.trim(),
+                features: document.getElementById("features").value.trim(),
+                design: document.getElementById("design").value.trim(),
+                interaction: document.getElementById("interaction").value.trim(),
+                tech: document.getElementById("tech").value.trim(),
+                extras: document.getElementById("extras").value.trim(),
+            };
+
+            let prompt = `Kamu adalah AI pembuat aplikasi web yang ahli dalam HTML, CSS, dan JavaScript.\n\n`;
+            prompt += `Buatkan sebuah aplikasi PWA (Progressive Web App) berdasarkan informasi berikut:\n\n`;
+            if (data.appName) prompt += `### Nama Aplikasi\n${data.appName}\n\n`;
+            if (data.purpose) prompt += `### Tujuan / Fungsi Utama\n${data.purpose}\n\n`;
+            if (data.targetUser) prompt += `### Target Pengguna\n${data.targetUser}\n\n`;
+            if (data.features) prompt += `### Fitur-Fitur yang Diinginkan\n${data.features}\n\n`;
+            if (data.design) prompt += `### Desain dan Gaya Tampilan\n${data.design}\n\n`;
+            if (data.interaction) prompt += `### Interaksi dan Perilaku\n${data.interaction}\n\n`;
+            if (data.tech) prompt += `### Teknologi dan Struktur\n${data.tech}\n\n`;
+            if (data.extras) prompt += `### Tambahan\n${data.extras}\n\n`;
+            prompt += `### Instruksi Akhir\nBuat seluruh aplikasi dalam satu file HTML agar mudah dijalankan.\nGunakan Bootstrap 5 untuk tampilan modern, dan sertakan service worker agar bisa bekerja offline.\nPastikan tampilannya responsive di perangkat mobile.`;
+
+            document.getElementById("result").innerText = prompt;
+            document.getElementById("resultSection").classList.remove("d-none");
+        });
+
+        document.getElementById("copyBtn").addEventListener("click", function () {
+            const resultText = document.getElementById("result").innerText;
+            navigator.clipboard.writeText(resultText);
+            this.innerHTML = '<i class="bi bi-check2"></i> Prompt Disalin!';
+            setTimeout(() => {
+                this.innerHTML = '<i class="bi bi-clipboard"></i> Salin Prompt';
+            }, 2000);
+        });
+    </script>
+</body>
+
+</html>
