@@ -142,6 +142,15 @@
             opacity: 0.7;
         }
 
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+
+        .form-check-label {
+            color: var(--text-primary);
+        }
+
         textarea {
             resize: none;
         }
@@ -422,11 +431,74 @@
 
                     <div class="mb-4">
                         <label class="form-label">
+                            <i class="bi bi-shield-lock-fill"></i>
+                            8. Sistem Autentikasi (Login/Register)
+                        </label>
+                        <select class="form-select mb-3" id="authSystem">
+                            <option value="none">❌ Tidak Perlu Login</option>
+                            <option value="simple">✅ Perlu Login & Register (Simpan di localStorage)</option>
+                        </select>
+                        <div id="authOptions" class="d-none">
+                            <div class="info-box mb-3">
+                                <small>
+                                    <strong>Sistem Login/Register:</strong> User bisa daftar akun baru dan login. Data
+                                    disimpan di localStorage browser.
+                                </small>
+                            </div>
+                            <label class="form-label mb-2" style="font-size: 0.9rem;">
+                                <i class="bi bi-list-check"></i>
+                                Fitur Autentikasi yang Diinginkan:
+                            </label>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="authRegister" checked>
+                                <label class="form-check-label" for="authRegister">
+                                    Form Register (Nama, Email, Password)
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="authLogin" checked>
+                                <label class="form-check-label" for="authLogin">
+                                    Form Login (Email, Password)
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="authRemember" checked>
+                                <label class="form-check-label" for="authRemember">
+                                    Remember Me / Tetap Login
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="authLogout" checked>
+                                <label class="form-check-label" for="authLogout">
+                                    Tombol Logout
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="authProfile">
+                                <label class="form-check-label" for="authProfile">
+                                    Halaman Profile User
+                                </label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="authValidation" checked>
+                                <label class="form-check-label" for="authValidation">
+                                    Validasi Form (Email valid, Password min 6 karakter)
+                                </label>
+                            </div>
+                            <textarea class="form-control" id="authCustom" rows="2"
+                                placeholder="Fitur autentikasi tambahan (opsional): Contoh: Forgot password, Edit profile, dll."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"></div>
+
+                    <div class="mb-4">
+                        <label class="form-label">
                             <i class="bi bi-plus-circle-fill"></i>
-                            8. Tambahan (Opsional)
+                            9. Tambahan Lainnya (Opsional)
                         </label>
                         <textarea class="form-control" id="extras" rows="2"
-                            placeholder="Contoh: Tambahkan ikon, animasi loading, atau gunakan Bootstrap 5."></textarea>
+                            placeholder="Contoh: Tambahkan ikon, animasi loading, atau fitur lain yang diinginkan."></textarea>
                     </div>
 
                     <div class="d-grid">
@@ -492,6 +564,16 @@
             }
         }
 
+        // Toggle Auth Options
+        document.getElementById("authSystem").addEventListener("change", function () {
+            const authOptions = document.getElementById("authOptions");
+            if (this.value === "simple") {
+                authOptions.classList.remove("d-none");
+            } else {
+                authOptions.classList.add("d-none");
+            }
+        });
+
         // Generate Prompt
         document.getElementById("generateBtn").addEventListener("click", function () {
             const appType = document.getElementById("appType").value;
@@ -504,6 +586,18 @@
                 interaction: document.getElementById("interaction").value.trim(),
                 tech: document.getElementById("tech").value.trim(),
                 extras: document.getElementById("extras").value.trim(),
+            };
+
+            // Auth System
+            const authSystem = document.getElementById("authSystem").value;
+            const authFeatures = {
+                register: document.getElementById("authRegister").checked,
+                login: document.getElementById("authLogin").checked,
+                remember: document.getElementById("authRemember").checked,
+                logout: document.getElementById("authLogout").checked,
+                profile: document.getElementById("authProfile").checked,
+                validation: document.getElementById("authValidation").checked,
+                custom: document.getElementById("authCustom").value.trim()
             };
 
             let prompt = `Kamu adalah AI pembuat aplikasi web yang ahli dalam HTML, CSS, dan JavaScript.\n\n`;
@@ -521,6 +615,44 @@
             if (data.design) prompt += `### Desain dan Gaya Tampilan\n${data.design}\n\n`;
             if (data.interaction) prompt += `### Interaksi dan Perilaku\n${data.interaction}\n\n`;
             if (data.tech) prompt += `### Teknologi dan Struktur\n${data.tech}\n\n`;
+
+            // Add auth system to prompt
+            if (authSystem === 'simple') {
+                prompt += `### Sistem Autentikasi\n`;
+                prompt += `Aplikasi memerlukan sistem login dan register dengan penyimpanan di localStorage.\n\n`;
+                prompt += `**Fitur yang diperlukan:**\n`;
+
+                if (authFeatures.register) {
+                    prompt += `- Form Register dengan field: Nama, Email, Password\n`;
+                }
+                if (authFeatures.login) {
+                    prompt += `- Form Login dengan field: Email, Password\n`;
+                }
+                if (authFeatures.remember) {
+                    prompt += `- Fitur "Remember Me" agar user tetap login\n`;
+                }
+                if (authFeatures.logout) {
+                    prompt += `- Tombol Logout untuk keluar dari akun\n`;
+                }
+                if (authFeatures.profile) {
+                    prompt += `- Halaman Profile untuk melihat dan edit data user\n`;
+                }
+                if (authFeatures.validation) {
+                    prompt += `- Validasi form: Email harus valid, Password minimal 6 karakter\n`;
+                }
+                if (authFeatures.custom) {
+                    prompt += `- ${authFeatures.custom}\n`;
+                }
+
+                prompt += `\n**Cara kerja sistem:**\n`;
+                prompt += `- Data user disimpan di localStorage dalam format array/object\n`;
+                prompt += `- Password sebaiknya di-hash (minimal) atau enkripsi sederhana\n`;
+                prompt += `- Setelah login berhasil, simpan session user di localStorage\n`;
+                prompt += `- Cek session saat halaman dimuat untuk auto-login\n`;
+                prompt += `- Redirect ke halaman login jika belum login\n`;
+                prompt += `- Hanya user yang sudah login yang bisa mengakses fitur utama aplikasi\n\n`;
+            }
+
             if (data.extras) prompt += `### Tambahan\n${data.extras}\n\n`;
 
             prompt += `### Instruksi Akhir\nBuat seluruh aplikasi dalam satu file HTML agar mudah dijalankan.\n`;
